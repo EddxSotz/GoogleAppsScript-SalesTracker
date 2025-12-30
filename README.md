@@ -1,2 +1,24 @@
-# GoogleAppsScript-SalesTracker
-Single Page Application (SPA) built on Google Apps Script
+Serverless Sales Tracker & Inventory System
+
+A Single Page Application (SPA) built on Google Apps Script that transforms Google Sheets into a relational database with a Front-End dashboard.
+🔴 Live Demo
+
+Click here to view the App (Note: Data resets nightly)
+https://script.google.com/macros/s/AKfycbx5i9EmnJEaSirCQJB9kzeZzlOZJF7cnxeSNxozJJQtFtHWOWmiIo8KL8N03bZDVhfYNg/exec
+⚡ Key Features
+
+    SPA Architecture: Sidebar navigation with instant view switching (No page reloads).
+
+    CRUD Operations: Full capability to Create new orders and Update existing ones via ID search.
+
+    State Management: custom JavaScript logic to handle product selection and form states.
+
+    Data Validation: Prevents submission of incomplete or invalid data types.
+
+🛠️ Tech Stack
+
+    Frontend: HTML5, CSS3 (Flexbox Dashboard Layout), Vanilla JavaScript.
+
+    Backend: Google Apps Script (Server-side processing).
+
+    Database: Google Sheets.
