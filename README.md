@@ -4,12 +4,12 @@ A Single Page Application (SPA) built on Google Apps Script that transforms Goog
 🔴 Live Demo
 
 Click here to view the App (Note: Data resets nightly)
-https://script.google.com/macros/s/AKfycbx5i9EmnJEaSirCQJB9kzeZzlOZJF7cnxeSNxozJJQtFtHWOWmiIo8KL8N03bZDVhfYNg/exec
+https://script.google.com/macros/s/AKfycbyTxAS0Z3xmUwAXw2g0ZYKEnIL9sg5APi5n1_faotSpXbK3S91-F1eacKQdVEHHSpIRhw/exec
 ⚡ Key Features
 
     SPA Architecture: Sidebar navigation with instant view switching (No page reloads).
 
-    CRUD Operations: Full capability to Create new orders and Update existing ones via ID search.
+    CRUD Operations: Full capability to Create new orders and Update existing ones via ID search and add/create new products
 
     State Management: custom JavaScript logic to handle product selection and form states.
 
