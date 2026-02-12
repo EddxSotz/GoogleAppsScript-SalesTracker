@@ -2,70 +2,77 @@ function doGet () {
   return HtmlService.createHtmlOutputFromFile("index");
 }
 
-function getSheetsNames() {
-  const allSheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
-  const allActiveSheetsNames =[]
-  for (const sheet of allSheets) {
-    const getCurrentSheetName = sheet.getName();
-       allActiveSheetsNames.push(getCurrentSheetName);
-  }
-  return allActiveSheetsNames;
-}
-
 function sendSaleToSheet(formData){
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     const sheet = spreadsheet.getSheetByName(formData.sheet);
+  const now = new Date();
 
-    const fullDateAndTime = new Date();
-    const dateOnly = fullDateAndTime.toLocaleDateString('default', {year:'numeric', month:'numeric', day:'numeric'});
-    const timeOnly = fullDateAndTime.toLocaleTimeString();
-    const monthOnly = fullDateAndTime.toLocaleString('default', {month: 'long'});
+  sheet.appendRow([
+    now.toLocaleDateString(),
+    now.toLocaleTimeString(),
+    now.toLocaleString('default', {month: 'long'}),
+    formData.sheet,
+    formData.name,
+    formData.category,
+    formData.quantity,
+    formData.status,
+    formData.price,
+    formData.saleId
+  ]);
 
-    sheet.appendRow([dateOnly,timeOnly,monthOnly, formData.sheet, formData.name, formData.category, formData.quantity,formData.status, formData.price,formData.saleId]);
-
-    return "Data saved"
+  return "Data saved";
 }
 
-function getProductsList(){
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = spreadsheet.getSheetByName("Products List");
-  const fullDataRange = sheet.getDataRange();
-  const numRows = fullDataRange.getNumRows();
-  const numColumns = fullDataRange.getNumColumns();
+function getInitialData() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const productSheet = ss.getSheetByName("Products List");
+  const allData = productSheet.getDataRange().getValues();
+  const headers = allData.shift();
+  const sheetNames = ss.getSheets().map(s => s.getName());
 
-  if (numRows <= 1) {
-    return []; // Return an empty array if no data rows
-  }
-  const dataRangeWithoutHeaders = sheet.getRange(2, 1, numRows - 1, numColumns);
-  const data = dataRangeWithoutHeaders.getValues();
-  Logger.log(data);
-  return data;
+  return {
+    headers: headers,
+    products: allData,
+    validSheets: sheetNames
+  };
 }
 
-function getProductHeaders(){
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = spreadsheet.getSheetByName("Products List");
-  const data = sheet.getDataRange().getValues();
-  const headers = data.shift();
-  Logger.log(headers);
-  return headers;
+function getSalesStats() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const allSheets = ss.getSheets();
+  const stats = [];
+
+  allSheets.forEach(sheet => {
+    const name = sheet.getName();
+    if (name !== "Products List") {
+      const saleCount = Math.max(0, sheet.getLastRow() - 1);
+      stats.push({
+        storeName: name,
+        count: saleCount
+      });
+    }
+  });
+
+  return stats;
 }
 
 function findSale(sheetNameSelected,saleId ) {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = spreadsheet.getSheetByName(sheetNameSelected);
   const lastRow = sheet.getLastRow();
-  let saleData={row:0,store:"", product:"", category: "", quantity:"", status:"", price:0};
+  let saleData = { found: false };
 
   for (let i=lastRow; i>= (lastRow-100); i--) {
 
-    if(sheet.getRange(i,11).getDisplayValue() == saleId) {
+    if(sheet.getRange(i,10).getDisplayValue() == saleId) {
+      saleData.found = true;
       saleData.row = i;
       saleData.store = sheet.getRange(i,4).getValue();
       saleData.product = sheet.getRange(i,5).getValue();
       saleData.category = sheet.getRange(i,6).getValue();
-      saleData.quantity = sheet.getRange(i,7).getDisplayValue();
-      saleData.status = sheet.getRange(i,8).getDisplayValue();
+      saleData.quantity = sheet.getRange(i,7).getValue();
+      saleData.status = sheet.getRange(i,8).getValue();
+      saleData.price = sheet.getRange(i, 9).getValue();
       return saleData;
     }
   }
